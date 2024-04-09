@@ -47,3 +47,30 @@ class Column:
         self.numCards-=1
         self.cards[-1].cardFlip()
 
+class Game:
+    suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
+    numbers = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+
+    def __init__(self, numColumns):
+        self.numColumns = numColumns
+        self.deck=[Card(self.suits[i], self.numbers[j], -1) for i in range(4) for j in range(13)]
+        random.shuffle(self.deck)
+        self.columns = [Column(1, i) for i in range(numColumns)]
+
+
+
+# ace = Card('Hearts',5, 4)
+# print(ace)
+# Col1 = Column(5, 1)
+# Col1.fillCards([['Hearts', 5, Col1.columnNum], ['Diamonds', 5, Col1.columnNum], ['Spades', 5, Col1.columnNum], ['Clubs', 4, Col1.columnNum], ['Hearts', 6, Col1.columnNum]])
+# print(Col1)
+# ace.cardFlip()
+# Col1.addCard(ace)
+# print(Col1)
+# Col1.deleteCard()
+# print(Col1)
+# Col1.deleteCard()
+# print(Col1)
+
+# print("\n\n\n")
+# a = Game(7)
