@@ -38,6 +38,8 @@ class Column:
         # self.cards  = [Card(*cardSet[i]) for i in range(self.numCards)]
         self.cards = cardSet
         self.cards[-1].cardFlip()
+        for i in range(self.numCards):
+            self.cards[i].columnNum = self.columnNum
 
     def addCard(self, card):
         self.cards.append(card)
@@ -63,9 +65,6 @@ class Game_Play:
         self.foundations={"Spades": [], "Hearts": [], "Diamonds": [], "Clubs": []}
         random.shuffle(self.deck)
         self.columns = [Column(i+1, i) for i in range(numColumns)]
-    # !todo
-    def __repr__(self):
-        return "\n".join([str(column) for column in self.columns])
     
     def checkValidity(self, card1, card2):
         if card1.color != card2.color and self.numbers.index(card1.number)-1 == self.numbers.index(card2.number):
@@ -73,8 +72,12 @@ class Game_Play:
         return False
     
     def checkFValidity(self, card1):
-        if card1.number == "A":
-            return True
+        print(self.numbers.index(card1.number)-1, self.foundations["Hearts"])
+        if len(self.foundations[card1.suit]) == 0:
+            if card1.number == "A":
+                return True
+            else:
+                return False
         if self.numbers.index(card1.number)-1 == self.numbers.index(self.foundations[card1.suit][-1].number):
             return True
         return False
@@ -83,6 +86,9 @@ class Game_Play:
         for i in range(len(self.columns)):
             self.columns[i].fillCards([self.deck.pop() for _ in range(i+1)])
         self.withdraw_deck = self.deck[:]
+        for i in range(len(self.withdraw_deck)):
+            self.withdraw_deck[i].cardFlip()
+            self.withdraw_deck[i].columnNum = "W"
         print(self.deck, "\n", self.withdraw_deck, "\n", len(self.withdraw_deck), "\n", self.columns)
     
     def moveCard(self, fcolumnNum, cardNumber, columnNum):
@@ -95,33 +101,51 @@ class Game_Play:
     def useDrawD(self, columnNum, j):
         self.columns[columnNum].addCard(self.withdraw_deck.pop(j))
 
-    def toFoundation(self, columnNum, foundationSuit):
-        if self.checkFValidity(self.columns[columnNum].cards[-1]):
-            self.foundations[foundationSuit].append(self.columns[columnNum].cards[-1]) 
+    def toFoundation(self, columnNum):
+        card = self.columns[columnNum].cards[-1]
+        if self.checkFValidity(card):
+            self.foundations[card.suit].append(card) 
             self.columns[columnNum].deleteCard()
+            self.columns[columnNum].cards[-1].cardFlip()
         else: 
             print("\nInvalid Move\n")
+            
     def fromFoundation(self, columnNum, foundationSuit):
-        if self.checkValidity(self.columns[columnNum].cards[-1], self.foundations[foundationSuit][-1]):
-            self.columns[columnNum].addCard(self.foundations[foundationSuit].pop())
+        if self.foundations[foundationSuit]:
+            if self.checkValidity(self.columns[columnNum].cards[-1], self.foundations[foundationSuit][-1]):
+                self.columns[columnNum].addCard(self.foundations[foundationSuit].pop())
+            else:
+                print("\nInvalid Move\n")
         else:
             print("\nInvalid Move\n")
+    
+    def printGame(self):
+        print("Draw Pile: ", end="")
+        if len(self.withdraw_deck) > 0:
+            print(self.withdraw_deck[-1])
+        else:
+            print("Empty")
+        
+        print("Foundations: ", end="")
+        for foundation in self.foundations:
+            if len(foundation) > 0:
+                print(foundation[-1], end=" ")
+            else:
+                print("Empty", end=" ")
+        print()
 
+        max_column_length = max(len(column.cards) for column in self.columns)
+        print("-"*18*self.numColumns)
+        for i in range(max_column_length):
+            for column in self.columns:
+                if i < len(column.cards):
+                    print(column.cards[i].suit+" "+column.cards[i].number+" "*(15-len(column.cards[i].suit)-len(str(column.cards[i].number)))+"|", end=" ")
+                else:
+                    print(" "*16+"|", end=" ")
+            print()
+            print("-"*18*self.numColumns)
 
-
-# ace = Card('Hearts',5, 4)
-# print(ace)
-# Col1 = Column(5, 1)
-# Col1.fillCards([['Hearts', 5, Col1.columnNum], ['Diamonds', 5, Col1.columnNum], ['Spades', 5, Col1.columnNum], ['Clubs', 4, Col1.columnNum], ['Hearts', 6, Col1.columnNum]])
-# print(Col1)
-# ace.cardFlip()
-# Col1.addCard(ace)
-# print(Col1)
-# Col1.deleteCard()
-# print(Col1)
-# Col1.deleteCard()
-# print(Col1)
-
-# print("\n\n\n")
-a = Game_Setup(7)
+a = Game_Play(7)
 a.fillColumns()
+a.toFoundation(1)
+a.printGame()
