@@ -72,7 +72,6 @@ class Game_Play:
         return False
     
     def checkFValidity(self, card1):
-        print(self.numbers.index(card1.number)-1, self.foundations["Hearts"])
         if len(self.foundations[card1.suit]) == 0:
             if card1.number == "A":
                 return True
@@ -100,13 +99,22 @@ class Game_Play:
         else:
             print("\nInvalid Move\n")
         
-    def useDrawD(self, columnNum, j):
-        self.columns[columnNum].addCard(self.withdraw_deck.pop(j))
-    
+    def useDrawD(self, columnNum):
+        if self.checkFValidity(self.withdraw_deck[-1], self.columns[columnNum].cards[-1]):
+            self.columns[columnNum].addCard(self.withdraw_deck.pop())
+        else:
+            print("\nInvalid Move\n")
+
+    def drawD_to_f(self):
+        if self.checkFValidity(self.withdraw_deck[-1], self.foundations[self.withdraw_deck[-1].suit].cards[-1]):
+            self.foundations[self.withdraw_deck[-1].suit].append(self.withdraw_deck.pop())
+        else:
+            print("\nInvalid Move\n")   
+
     def nextWD(self):
         if len(self.withdraw_deck) > 0:
-            wdc = self.withdraw_deck.pop()
-            self.withdraw_deck.insert(0, wdc)
+            wdc = self.withdraw_deck.pop(0)
+            self.withdraw_deck.append(wdc)
         else:
             print("\nNo more cards in the draw pile\n")
     def toFoundation(self, columnNum):
@@ -155,7 +163,6 @@ class Game_Play:
 
 a = Game_Play(7)
 a.fillColumns()
-a.toFoundation(1)
 a.printGame()
 
 while True:
@@ -163,12 +170,32 @@ while True:
     if len(uinp)==1 and uinp[0].lower()=='w':
         a.nextWD()
     elif uinp[0].lower()=="w" and len(uinp)!=1:
-        a.useDrawD(int(uinp[1]), -1)
+        a.useDrawD(int(uinp[1]))
     elif uinp[1].lower()=="f" and len(uinp[1])==1:
         a.toFoundation(int(uinp[0]))
     elif len(uinp[0].lower())!=1:
         a.moveCard(int(ord(uinp[0][0].upper())), int(uinp[0][1:]), int(uinp[1]))
-
+    elif uinp[0].lower=="w" and uinp[1].lower()=="f":
+        a.drawD_to_f()
     else:
         a.moveCard(int(uinp[0]), -1, int(uinp[1]))
     a.printGame()
+
+
+    #!todo 1. Implement the win condition
+    #!todo 2. Fix bugs when a column is accessed but is empty
+    #!todo 3. Implement the from foundation function
+    #!todo 4. Implement the withdraw pile to foundation function
+    #!todo 5. Refine the game loop
+    #!todo 6. Use gemini to give a winning cardset instead of random shuffling
+    #!todo 8. Make a better representation of cards in CLI
+    #!todo 9. Implement a show demo option to learn how to play/see what format to use
+    #!todo 10. Write a more detailed README
+    #!todo 11. Implement a timer
+    #!todo 12. Implement a scoring system
+    #!todo 13. Implement a save and load function
+    #!todo 14. Implement a restart function
+    #!todo 15. Implement a help function (using gemini)
+    #!todo 16. Implement a hard mode where you are given a hard to win cardset and you have a timer with limited number of invalid moves before game over
+    #!todo 17. Implement a GUI using tkinter (beats the whole Soli "CLI" thing, but worth a try with a black and green background and images that match the background)
+    #!todo 18. Different formats 
