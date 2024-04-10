@@ -94,8 +94,8 @@ class Game_Play:
         if self.checkValidity(self.columns[columnNum].cards[cardNumber], self.columns[fcolumnNum].cards[-1]):    
             self.columns[columnNum].cards.extend(self.columns[fcolumnNum].cards[cardNumber:])
             self.columns[fcolumnNum].cards = self.columns[fcolumnNum].cards[:cardNumber]
-            self.columns[fcolumnNum].deleteCard()
-            # self.columns[fcolumnNum].cards[-1].cardFlip() if self.columns[fcolumnNum].cards else None
+            # self.columns[fcolumnNum].deleteCard()
+            self.columns[fcolumnNum].cards[-1].cardFlip() if self.columns[fcolumnNum].cards else None
         else:
             print("\nInvalid Move\n")
         
