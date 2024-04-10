@@ -2,6 +2,9 @@
 # Made by Rhutvik Hegde from VIT Vellore, Reg. No. - 23BCI0079
 
 import random
+import SoliArt as sa # Not an external library, just a file with ASCII art for the game
+
+sa.printTitle()
 
 class Card:
     def __init__(self, suit, number, columnNum, flipped=False):
@@ -88,7 +91,7 @@ class Game_Play:
         for i in range(len(self.withdraw_deck)):
             self.withdraw_deck[i].cardFlip()
             self.withdraw_deck[i].columnNum = "W"
-        print(self.deck, "\n", self.withdraw_deck, "\n", len(self.withdraw_deck), "\n", self.columns)
+        # print(self.deck, "\n", self.withdraw_deck, "\n", len(self.withdraw_deck), "\n", self.columns)
     
     def moveCard(self, fcolumnNum, cardNumber, columnNum):
         if self.checkValidity(self.columns[columnNum].cards[cardNumber], self.columns[fcolumnNum].cards[-1]):    
@@ -151,14 +154,19 @@ class Game_Play:
         print()
 
         max_column_length = max(len(column.cards) for column in self.columns)
+        for i in range(self.numColumns):
+            print("Column ", i+1," "*7, end=" ")
+        print()
         print("-"*18*self.numColumns)
+        val=65
         for i in range(max_column_length):
             for column in self.columns:
                 if i < len(column.cards):
                     print(column.cards[i].suit+" "+column.cards[i].number+" "*(15-len(column.cards[i].suit)-len(str(column.cards[i].number)))+"|", end=" ") if column.cards[i].flipped else print("???"+" "+"?"+" "*11+"|", end=" ")
                 else:
                     print(" "*16+"|", end=" ")
-            print()
+            print(chr(val))
+            val+=1
             print("-"*18*self.numColumns)
 
 a = Game_Play(7)
@@ -167,8 +175,13 @@ a.printGame()
 
 while True:
     uinp = input("Enter your move: ").split(">")
+
     if len(uinp)==1 and uinp[0].lower()=='w':
         a.nextWD()
+    elif len(uinp)==1 and uinp[0].lower()=='q':
+        exit()
+    elif len(uinp)==1 and uinp[0].lower()=='i':
+        sa.printInst()
     elif uinp[0].lower()=="w" and len(uinp)!=1:
         a.useDrawD(int(uinp[1]))
     elif uinp[1].lower()=="f" and len(uinp[1])==1:
@@ -189,12 +202,12 @@ while True:
     #!todo 5. Refine the game loop
     #!todo 6. Use gemini to give a winning cardset instead of random shuffling
     #!todo 8. Make a better representation of cards in CLI
-    #!todo 9. Implement a show demo option to learn how to play/see what format to use
+    #!todo 9. Implement a show demo option to learn how to play/see what format to use and give a title- DONE (made instructions)
     #!todo 10. Write a more detailed README
     #!todo 11. Implement a timer
     #!todo 12. Implement a scoring system
     #!todo 13. Implement a save and load function
-    #!todo 14. Implement a restart function
+    #!todo 14. Implement a restart function - DONE
     #!todo 15. Implement a help function (using gemini)
     #!todo 16. Implement a hard mode where you are given a hard to win cardset and you have a timer with limited number of invalid moves before game over
     #!todo 17. Implement a GUI using tkinter (beats the whole Soli "CLI" thing, but worth a try with a black and green background and images that match the background)
