@@ -31,31 +31,81 @@ class Column:
         self.cards = []
 
     def __repr__(self):
-        cardsStr = f"Column | Column number: {self.columnNum}, Number of cards: {self.numCards} \nAvailable Cards: \n" +"\n".join([str(card) for card in self.cards])
+        cardsStr = f"\nColumn | Column number: {self.columnNum}, Number of cards: {self.numCards} \nAvailable Cards: \n" +"\n".join([str(card) for card in self.cards])
         return cardsStr
 
     def fillCards(self, cardSet):
-        self.cards  = [Card(*cardSet[i]) for i in range(self.numCards)]
+        # self.cards  = [Card(*cardSet[i]) for i in range(self.numCards)]
+        self.cards = cardSet
         self.cards[-1].cardFlip()
 
     def addCard(self, card):
         self.cards.append(card)
         self.numCards+=1
+        self.isEmpty = False
 
     def deleteCard(self):
-        self.cards = self.cards[:-1]
-        self.numCards-=1
-        self.cards[-1].cardFlip()
+        if not self.isEmpty:
+            self.cards = self.cards[:-1]
+            self.numCards-=1
+            self.cards[-1].cardFlip()
+        if self.numCards == 0:
+            self.isEmpty = True
 
-class Game:
+class Game_Play:
     suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
     numbers = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 
     def __init__(self, numColumns):
         self.numColumns = numColumns
         self.deck=[Card(self.suits[i], self.numbers[j], -1) for i in range(4) for j in range(13)]
+        self.withdraw_deck = []
+        self.foundations={"Spades": [], "Hearts": [], "Diamonds": [], "Clubs": []}
         random.shuffle(self.deck)
-        self.columns = [Column(1, i) for i in range(numColumns)]
+        self.columns = [Column(i+1, i) for i in range(numColumns)]
+    # !todo
+    def __repr__(self):
+        return "\n".join([str(column) for column in self.columns])
+    
+    def checkValidity(self, card1, card2):
+        if card1.color != card2.color and self.numbers.index(card1.number)-1 == self.numbers.index(card2.number):
+            return True
+        return False
+    
+    def checkFValidity(self, card1):
+        if card1.number == "A":
+            return True
+        if self.numbers.index(card1.number)-1 == self.numbers.index(self.foundations[card1.suit][-1].number):
+            return True
+        return False
+    
+    def fillColumns(self):
+        for i in range(len(self.columns)):
+            self.columns[i].fillCards([self.deck.pop() for _ in range(i+1)])
+        self.withdraw_deck = self.deck[:]
+        print(self.deck, "\n", self.withdraw_deck, "\n", len(self.withdraw_deck), "\n", self.columns)
+    
+    def moveCard(self, fcolumnNum, cardNumber, columnNum):
+        if self.checkValidity(self.columns[fcolumnNum].cards[cardNumber], self.columns[columnNum].cards[-1]):    
+            self.columns[columnNum].extend(self.columns[fcolumnNum][cardNumber:])
+            self.columns[fcolumnNum] = self.columns[fcolumnNum][:cardNumber]
+        else:
+            print("\nInvalid Move\n")
+        
+    def useDrawD(self, columnNum, j):
+        self.columns[columnNum].addCard(self.withdraw_deck.pop(j))
+
+    def toFoundation(self, columnNum, foundationSuit):
+        if self.checkFValidity(self.columns[columnNum].cards[-1]):
+            self.foundations[foundationSuit].append(self.columns[columnNum].cards[-1]) 
+            self.columns[columnNum].deleteCard()
+        else: 
+            print("\nInvalid Move\n")
+    def fromFoundation(self, columnNum, foundationSuit):
+        if self.checkValidity(self.columns[columnNum].cards[-1], self.foundations[foundationSuit][-1]):
+            self.columns[columnNum].addCard(self.foundations[foundationSuit].pop())
+        else:
+            print("\nInvalid Move\n")
 
 
 
@@ -73,4 +123,5 @@ class Game:
 # print(Col1)
 
 # print("\n\n\n")
-# a = Game(7)
+a = Game_Setup(7)
+a.fillColumns()
