@@ -105,14 +105,15 @@ PS: I really wanted to make the cards look like this :(
                                                                      
 ''']
 
-def printTitle():
+def print_title():
     print(random.choice(artlist))
     print("\nPress i to see instructions\n")
 def printInst():
     print('''\n\nInstructions:
           1. Use ">" to move a card from one column to another (e.g. 1>2 moves the top card from column 1 to column 2)
           2. use "w" to go to the next card in the withdraw deck
-          3. use "f>[columnNumber]" to move a card from the foundation to column (e.g. f>1 moves the top card of the same suit in foundation to column 1)
-          4. use "w>[columnNumber]" to move a card from the withdraw deck to a column (e.g. w>1 moves the top card of the withdraw deck to column 1)
+          3. use "f>[column_number]" to move a card from the foundation to column (e.g. f>1 moves the top card of the same suit in foundation to column 1)
+          4. use "w>[column_number]" to move a card from the withdraw deck to a column (e.g. w>1 moves the top card of the withdraw deck to column 1)
           5. use "w>f" to move the top card of the withdraw deck to the foundation
-          6. use "q" to quit the game\n''')
+          6. use "r" to restart the game
+          7. use "q" to quit the game\n''')
