@@ -89,25 +89,28 @@ class Game_Play:
             self.withdraw_deck[i].card_flip()
             self.withdraw_deck[i].column_num = "W"
     
-    def move_card(self, f_column_num:int, card_number: int, column_num: int):
+    def move_card(self, f_column_num:int, card_number: str, column_num: int):
+        card_number=ord(card_number.lower())-97 if card_number!=-1 else -1
+        if not self.columns[f_column_num].cards:
+            print("\nInvalid Move\n")
+            return
         if not self.columns[column_num].cards:
             if self.columns[f_column_num].cards[card_number].number == "K" and self.columns[f_column_num].cards[card_number].flipped:
-                self.columns[f_column_num].cards.extend(self.columns[column_num].cards[card_number:])
-                self.columns[column_num].cards = self.columns[column_num].cards[:card_number]
-                self.columns[column_num].cards[-1].card_flip() if self.columns[column_num].cards else None
+                self.columns[column_num].cards.extend(self.columns[f_column_num].cards[card_number:])
+                self.columns[f_column_num].cards = self.columns[f_column_num].cards[:card_number]
+                self.columns[f_column_num].cards[-1].card_flip() if self.columns[f_column_num].cards else None
+                return
             print("\nInvalid Move\n")
             return
         elif not self.columns[f_column_num].cards[card_number].flipped:
             print("\nInvalid Move\n")
             return
+        self.columns[column_num].cards.extend(self.columns[f_column_num].cards[card_number:])
+        self.columns[f_column_num].cards = self.columns[f_column_num].cards[:card_number]
+        self.columns[f_column_num].cards[-1].card_flip() if self.columns[f_column_num].cards else None
 
+        return
 
-        if self.check_validity(self.columns[column_num].cards[card_number], self.columns[f_column_num].cards[-1]):    
-            self.columns[column_num].cards.extend(self.columns[f_column_num].cards[card_number:])
-            self.columns[f_column_num].cards = self.columns[f_column_num].cards[:card_number]
-            self.columns[f_column_num].cards[-1].card_flip() if self.columns[f_column_num].cards else None
-        else:
-            print("\nInvalid Move\n")
         
     def use_draw_D(self, column_num: int):
         if not self.withdraw_deck:
@@ -237,14 +240,14 @@ while True:
             elif one.isdigit() and two.lower()=='f':
                 a.to_foundation(int(one)-1) if int(one)-1 in range(7) else print("\nInvalid Move\n")
             elif one.isdigit() and two.isdigit():
-                a.move_card(int(one)-1, -1, int(two)-1) if int(one)-1 in range(7) and int(two)-1 in range(7) else print("\nInvalid Move\n")
+                a.move_card(int(one)-1, -1, int(two)-1) if int(one)-1 in range(7) and int(two)-1 in range(7) and one!=two else print("\nInvalid Move\n")
 
         elif len(uinp)==4 and uinp[2]=='>':
             col = uinp[0]
             row = uinp[1]
             to_col = uinp[3]
-            if col.isdigit() and to_col.isdigit() and ord(row.lower())-97 in range(7):
-                a.move_card(int(one)-1, int(two)-1, int(two)-1) if (int(one)-1 in range(7) and int(two)-1 in range(7)) else print("\nInvalid Move\n")
+            if col.isdigit() and to_col.isdigit():
+                a.move_card(int(col)-1, row, int(to_col)-1) if (int(col)-1 in range(7) and int(to_col)-1 in range(7)) and col!=to_col else print("\nInvalid Move\n")
             elif col.lower()=="f" and row.lower().isdigit() and to_col.lower().isdigit():
                 a.from_foundation(int(to_col)-1, [i for i in a.foundations][int(row)-1]) if int(to_col)-1 in range(7) else print("\nInvalid Move\n")
 
@@ -258,10 +261,10 @@ while True:
 #!todo w to f
 
     #!todo 1. Implement the win condition - DONE
-    #!todo 2. Fix bugs when a column is accessed but is empty
-    #!todo 3. Implement the from foundation function
-    #!todo 4. Implement the withdraw pile to foundation function
-    #!todo 5. Refine the game loop
+    #!todo 2. Fix bugs when a column is accessed but is empty -DONE
+    #!todo 3. Implement the from foundation function - DONE
+    #!todo 4. Implement the withdraw pile to foundation function - DONE
+    #!todo 5. Refine the game loop - DONE (kinda)
     #!todo 6. Use gemini to give a winning cardset instead of random shuffling
     #!todo 8. Make a better representation of cards in CLI
     #!todo 9. Implement a show demo option to learn how to play/see what format to use and give a title- DONE (made instructions)
