@@ -106,9 +106,16 @@ PS: I really wanted to make the cards look like this :(
 ''']
 
 def print_title():
+    """
+    prints a random title from the list of titles
+    """
     print(random.choice(artlist))
     print("\nPress i to see instructions\n")
+
 def print_victory():
+    """
+    print the victory message
+    """
     print("""\n\n .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------. 
 | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |
 | | ____   ____  | || |     _____    | || |     ______   | || |  _________   | || |     ____     | || |  _______     | || |  ____  ____  | || |              | |
@@ -120,7 +127,11 @@ def print_victory():
 | |              | || |              | || |              | || |              | || |              | || |              | || |              | || |     (_)      | |
 | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |
  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n\n""")
+
 def print_inst():
+    """
+    prints the instructions
+    """
     print('''\n\nInstructions:
           1. Use ">" to move a card from one column to another (e.g. 1>2 moves the top card from column 1 to column 2)
           2. use "w" to go to the next card in the withdraw deck
