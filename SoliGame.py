@@ -90,26 +90,36 @@ class Game_Play:
             self.withdraw_deck[i].column_num = "W"
     
     def move_card(self, f_column_num:int, card_number: str, column_num: int):
+        if f_column_num not in range(0,7) or column_num not in range(0,7) or f_column_num==column_num:
+            print("\nInvalid Move\n")
+            return
+        
         card_number=ord(card_number.lower())-97 if card_number!=-1 else -1
+        
         if not self.columns[f_column_num].cards:
             print("\nInvalid Move\n")
             return
-        if not self.columns[column_num].cards:
-            if self.columns[f_column_num].cards[card_number].number == "K" and self.columns[f_column_num].cards[card_number].flipped:
-                self.columns[column_num].cards.extend(self.columns[f_column_num].cards[card_number:])
-                self.columns[f_column_num].cards = self.columns[f_column_num].cards[:card_number]
-                self.columns[f_column_num].cards[-1].card_flip() if self.columns[f_column_num].cards else None
-                return
+        
+        if len(self.columns[f_column_num].cards)<=card_number:
             print("\nInvalid Move\n")
             return
-        elif not self.columns[f_column_num].cards[card_number].flipped:
+        
+        if not self.columns[column_num].cards and self.columns[f_column_num].cards[card_number].number.lower()=='k':
+            self.columns[column_num].cards.extend(self.columns[f_column_num].cards[card_number:])
+            self.columns[f_column_num].cards=self.columns[f_column_num].cards[:card_number]
+            self.columns[f_column_num].cards[-1].card_flip() if self.columns[f_column_num].cards else None
+            return
+        
+        if self.check_validity(self.columns[column_num].cards[-1], self.columns[f_column_num].cards[card_number]):
+            self.columns[column_num].cards.extend(self.columns[f_column_num].cards[card_number:])
+            self.columns[f_column_num].cards=self.columns[f_column_num].cards[:card_number]
+            self.columns[f_column_num].cards[-1].card_flip() if self.columns[f_column_num].cards else None
+            return
+        
+        else:
             print("\nInvalid Move\n")
             return
-        self.columns[column_num].cards.extend(self.columns[f_column_num].cards[card_number:])
-        self.columns[f_column_num].cards = self.columns[f_column_num].cards[:card_number]
-        self.columns[f_column_num].cards[-1].card_flip() if self.columns[f_column_num].cards else None
 
-        return
 
         
     def use_draw_D(self, column_num: int):
@@ -253,6 +263,10 @@ while True:
 
         if a.check_win():
             print("\nVictory has been achieved\n")
+            sa.print_victory()
+            do = input("Do you want to play again? (y/n): ")
+            if do.lower()=='y':
+                break
             exit()
         a.print_game()
     if q==1:
@@ -277,24 +291,3 @@ while True:
     #!todo 16. Implement a hard mode where you are given a hard to win cardset and you have a timer with limited number of invalid moves before game over
     #!todo 17. Implement a GUI using tkinter (beats the whole Soli "CLI" thing, but worth a try with a black and green background and images that match the background)
     #!todo 18. Different formats 
-
-
-
-
-    # def to_foundation(self, column_num: int, foundation_suit: str):
-    #     """
-    #     Moves the top card of the column to the foundation if the move is valid
-    #     :param column_num: The number of the column from which the card is to be moved
-    #     :param foundation_suit: The suit of the foundation to which the card is to be moved
-    #     return 
-    #     """
-    #     if not self.columns[column_num].cards:
-    #         print("\nInvalid Move\n")
-    #         return
-    #     card = self.columns[column_num].cards[-1]
-    #     if self.check_f_validity(card):
-    #         self.foundations[card.suit].append(card) 
-    #         self.columns[column_num].deleteCard()
-    #         # self.columns[column_num].cards[-1].card_flip()
-    #     else: 
-    #         print("\nInvalid Move\n")4

@@ -108,12 +108,28 @@ PS: I really wanted to make the cards look like this :(
 def print_title():
     print(random.choice(artlist))
     print("\nPress i to see instructions\n")
-def printInst():
+def print_victory():
+    print("""\n\n .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------. 
+| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |
+| | ____   ____  | || |     _____    | || |     ______   | || |  _________   | || |     ____     | || |  _______     | || |  ____  ____  | || |              | |
+| ||_  _| |_  _| | || |    |_   _|   | || |   .' ___  |  | || | |  _   _  |  | || |   .'    `.   | || | |_   __ \    | || | |_  _||_  _| | || |      _       | |
+| |  \ \   / /   | || |      | |     | || |  / .'   \_|  | || | |_/ | | \_|  | || |  /  .--.  \  | || |   | |__) |   | || |   \ \  / /   | || |     | |      | |
+| |   \ \ / /    | || |      | |     | || |  | |         | || |     | |      | || |  | |    | |  | || |   |  __ /    | || |    \ \/ /    | || |     | |      | |
+| |    \ ' /     | || |     _| |_    | || |  \ `.___.'\  | || |    _| |_     | || |  \  `--'  /  | || |  _| |  \ \_  | || |    _|  |_    | || |     | |      | |
+| |     \_/      | || |    |_____|   | || |   `._____.'  | || |   |_____|    | || |   `.____.'   | || | |____| |___| | || |   |______|   | || |     |_|      | |
+| |              | || |              | || |              | || |              | || |              | || |              | || |              | || |     (_)      | |
+| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |
+ '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' \n\n""")
+def print_inst():
     print('''\n\nInstructions:
           1. Use ">" to move a card from one column to another (e.g. 1>2 moves the top card from column 1 to column 2)
           2. use "w" to go to the next card in the withdraw deck
-          3. use "f>[column_number]" to move a card from the foundation to column (e.g. f>1 moves the top card of the same suit in foundation to column 1)
-          4. use "w>[column_number]" to move a card from the withdraw deck to a column (e.g. w>1 moves the top card of the withdraw deck to column 1)
-          5. use "w>f" to move the top card of the withdraw deck to the foundation
-          6. use "r" to restart the game
-          7. use "q" to quit the game\n''')
+          3. use "f[foundation_column_number]>[column_number]" to move a card from the foundation to column (e.g. f1>2 moves the top card
+             of the suit in column 1 of foundation to column 2 of game)
+          4. use "[column_number]>f" to move a card from a column to the foundation (e.g. 1>f moves the top card of column 1 to the foundation)
+          5. use "w>[column_number]" to move a card from the withdraw deck to a column (e.g. w>1 moves the top card of the withdraw deck to column 1)
+          6. use "w>f" to move the top card of the withdraw deck to the foundation
+          7. use "[column_number][row_letter]>[column_number]" to move a card from one column to another (e.g. 1a>2 moves the cards from row "a" onwards from column 1 to column 2)
+          8. use "r" to restart the game
+          9. use "i" to see the instructions again
+          10. use "q" to quit the game\n''')
