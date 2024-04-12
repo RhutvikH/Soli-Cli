@@ -48,4 +48,5 @@ Using gemini AI to give a winning deck (implementation): -
         Seventh Pile: King of Spades
 
 I was not successfully able to persuade gemini to give me a good deck of cards, but given some more time, i could do it
-so, SOLITAIRE BI--
+
+thus, SOLITAIRE.
