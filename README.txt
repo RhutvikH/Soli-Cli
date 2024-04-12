@@ -30,3 +30,22 @@ How to Play:
     The game involves moving cards between columns, foundations, and the draw pile.
     Follow the provided instructions to make moves and interact with the game.
     Enjoy the challenge of SoliCli and strive for victory!
+
+Using gemini AI to give a winning deck (implementation): -
+    import and use my API key for google.generativeai
+    ask it to generate a deck of cards and seperate them into 7 colums such that the game is winnable
+    but when i actually so it, gemini cries and refuses to give me a deck by insisting 
+    that the "randomness makes the game interesting", and its impossible to generate such a deck, but
+    after i was persistent, it said google solitaire does the following stuff to make the game winnable:
+    
+    o  The game is winnable if the first 24 cards are dealt in a specific order.Tableau Setup (Imagine the cards face down):
+        Top Left Pile: A high red card (ideally Queen of Hearts)
+        Second Pile: Any high card alternating color with the first pile (ideally Jack of Diamonds)
+        Third Pile: Ten of Clubs
+        Fourth Pile: Nine of Spades
+        Fifth Pile: Any red card (ideally Eight of Hearts)
+        Sixth Pile: Any black card (ideally Seven of Diamonds)
+        Seventh Pile: King of Spades
+
+I was not successfully able to persuade gemini to give me a good deck of cards, but given some more time, i could do it
+so, SOLITAIRE BI--
