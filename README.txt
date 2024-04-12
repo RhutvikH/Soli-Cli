@@ -24,7 +24,7 @@ Implements solitaire game logic and card movements.
 
 Planned Enhancements:
     Scoring system, timer, save/load functions, using the gemini api to give a winning deck (currently, the deck is random, so there is no guarantee of a winning deck)
-    using the gemini api to play the game and win on its own.
+    Using the gemini api to play the game and win on its own.
 
 How to Play:
     The game involves moving cards between columns, foundations, and the draw pile.
