@@ -66,7 +66,7 @@ class Column:
         """
         Returns a printable representation of the Column object.
         """
-        cards_string = f"\nColumn | Column number: {self.column_num}, Number of cards: {self.num_cards} \nAvailable Cards: \n" +"\n".join([str(card) for card in self.cards])
+        cards_string = f"\nColumn | Column number: {self.column_num}, Number of cards: {len(self.cards)} \nAvailable Cards: \n" +"\n".join([str(card) for card in self.cards])
         return cards_string
 
     def fill_cards(self, card_set: list):
@@ -77,7 +77,7 @@ class Column:
         """
         self.cards = card_set
         self.cards[-1].card_flip()
-        for i in range(self.num_cards):
+        for i in range(len(self.cards)):
             self.cards[i].column_num = self.column_num
 
     def add_card(self, card: Card):
@@ -87,7 +87,7 @@ class Column:
         - card (Card): The card to be added to the column.
         """
         self.cards.append(card)
-        self.num_cards+=1
+        card.column_num = self.column_num
         self.is_empty = False
 
     def delete_card(self):
@@ -96,9 +96,8 @@ class Column:
         """
         if not self.is_empty:
             self.cards = self.cards[:-1]
-            self.num_cards-=1
             self.cards[-1].card_flip() if self.cards else None # flip the card above the deleted card in order to make it active (since the one below it is deleted)
-        if self.num_cards == 0:
+        if len(self.cards) == 0:
             self.is_empty = True
 
 class Game_Play:
@@ -335,63 +334,63 @@ class Game_Play:
             val+=1
             print("-"*18*self.num_columns)
 
-def game_loop():
-    """
-    the way the game is played/ The flow of the game"""
+#game_loop
+"""
+the way the game is played/ The flow of the game"""
+while True:
+    print()
+    print()
+    sa.print_title()
+    a = Game_Play(7)
+    a.fill_columns()
+    a.print_game()
+    q=0
     while True:
-        print()
-        print()
-        sa.print_title()
-        a = Game_Play(7)
-        a.fill_columns()
-        a.print_game()
-        q=0
-        while True:
-            uinp = input("Enter your move: ")
-            check_inp = uinp.split(">")
-            if len(uinp)==1:
-                if uinp=='w': # withdraw deck to column
-                    a.next_wd()
-                elif uinp=='r': # restart
-                    break
-                elif uinp=='q': # quit
-                    q=1
-                    break
-                elif uinp=='i': # instructions
-                    sa.print_inst()
-            elif len(uinp)==3 and uinp[1]=='>': # move card from column to column
-                one = check_inp[0]
-                two = check_inp[1]
-                if one.lower()=="w" and two.lower()=="f":
-                    a.draw_D_to_f()
-                elif one.lower()=="w" and two.isdigit():
-                    a.use_draw_D(int(two)-1) if (int(two)-1 in range(7)) else print("\nInvalid Move\n")
-                elif one.isdigit() and two.lower()=='f':
-                    a.to_foundation(int(one)-1) if int(one)-1 in range(7) else print("\nInvalid Move\n")
-                elif one.isdigit() and two.isdigit():
-                    a.move_card(int(one)-1, -1, int(two)-1) if int(one)-1 in range(7) and int(two)-1 in range(7) and one!=two else print("\nInvalid Move\n")
+        uinp = input("Enter your move: ")
+        check_inp = uinp.split(">")
+        if len(uinp)==1:
+            if uinp=='w': # withdraw deck to column
+                a.next_wd()
+            elif uinp=='r': # restart
+                break
+            elif uinp=='q': # quit
+                q=1
+                break
+            elif uinp=='i': # instructions
+                sa.print_inst()
+        elif len(uinp)==3 and uinp[1]=='>': # move card from column to column
+            one = check_inp[0]
+            two = check_inp[1]
+            if one.lower()=="w" and two.lower()=="f":
+                a.draw_D_to_f()
+            elif one.lower()=="w" and two.isdigit():
+                a.use_draw_D(int(two)-1) if (int(two)-1 in range(7)) else print("\nInvalid Move\n")
+            elif one.isdigit() and two.lower()=='f':
+                a.to_foundation(int(one)-1) if int(one)-1 in range(7) else print("\nInvalid Move\n")
+            elif one.isdigit() and two.isdigit():
+                a.move_card(int(one)-1, -1, int(two)-1) if (int(one)-1 in range(7) and int(two)-1 in range(7)) and one!=two else print("\nInvalid Move\n")
 
-            elif len(uinp)==4 and uinp[2]=='>': # move card(s) from column to column
-                col = uinp[0]
-                row = uinp[1]
-                to_col = uinp[3]
-                if col.isdigit() and to_col.isdigit():
-                    a.move_card(int(col)-1, row, int(to_col)-1) if (int(col)-1 in range(7) and int(to_col)-1 in range(7)) and col!=to_col else print("\nInvalid Move\n")
-                elif col.lower()=="f" and row.lower().isdigit() and to_col.lower().isdigit():
-                    a.from_foundation(int(to_col)-1, [i for i in a.foundations][int(row)-1]) if int(to_col)-1 in range(7) else print("\nInvalid Move\n")
+        elif len(uinp)==4 and uinp[2]=='>': # move card(s) from column to column
+            col = uinp[0]
+            row = uinp[1]
+            to_col = uinp[3]
+            if col.isdigit() and to_col.isdigit() and not row.isdigit():
+                a.move_card(int(col)-1, row, int(to_col)-1) if (int(col)-1 in range(7) and int(to_col)-1 in range(7)) and col!=to_col else print("\nInvalid Move\n")
+            elif col.lower()=="f" and row.lower().isdigit() and to_col.lower().isdigit():
+                a.from_foundation(int(to_col)-1, [i for i in a.foundations][int(row)-1]) if int(to_col)-1 in range(7) else print("\nInvalid Move\n")
 
-            if a.check_win(): # if the game has been won
-                print("\nVictory has been achieved\n")
-                sa.print_victory()
-                do = input("Do you want to play again? (y/n): ")
-                if do.lower()=='y':
-                    break
-                exit()
-            a.print_game()
-        if q==1:
+        if a.check_win(): # if the game has been won
+            print("\nVictory has been achieved\n")
+            sa.print_victory()
+            do = input("Do you want to play again? (y/n): ")
+            if do.lower()=='y':
+                break
             exit()
+        a.print_game()
+    if q==1:
+        exit()
 
-game_loop()
+
 
 #!todo 1. Implement the win condition - DONE
 #!todo 2. Fix bugs when a column is accessed but is empty -DONE
